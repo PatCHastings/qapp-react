@@ -1,0 +1,36 @@
+.container {
+    margin-top: 4rem;
+  }
+  .success-gif {
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* To center-align the image */
+    margin: 0 auto; /* Center-align the image horizontally */
+  }
+  
+  .card {
+    /* Your card styles go here */
+  }
+  
+  .card-title {
+    /* Your card title styles go here */
+  }
+  
+  .alert-danger {
+    /* Your error message styles go here */
+  }
+  
+  .form-group {
+    /* Your form group styles go here */
+  }
+  
+  .form-control {
+    /* Your form control styles go here */
+  }
+  
+  .btn-primary {
+    /* Your primary button styles go here */
+  }
+  .label {
+
+  }
