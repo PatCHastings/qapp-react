@@ -12,12 +12,12 @@ function WelcomePage() {
     try {
       // Send a GET request to the server to authenticate the SID
       const response = await fetch(
-        `http://localhost:8080/api/users/authenticate/${SID}`
+        `http://localhost:8080/api/users/authenticate?SID=${SID}`
       );
 
       if (response.ok) {
         // SID is authenticated, navigate to AnswerForm
-        navigate("/answer-form");
+        navigate("/answer");
       } else {
         // SID is not authenticated, display an error message
         setErrorMessage("SID is not valid. Please try again.");

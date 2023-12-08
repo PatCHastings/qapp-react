@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function RegistrationPage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [userName, setuserName] = useState("");
   const [sid, setSid] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -17,7 +17,7 @@ function RegistrationPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, sid }),
+        body: JSON.stringify({ userName, sid }),
       });
 
       if (response.ok) {
@@ -44,8 +44,8 @@ function RegistrationPage() {
           <input
             type="text"
             className="form-control"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={userName}
+            onChange={(e) => setuserName(e.target.value)}
           />
         </div>
         <div className="form-group">
