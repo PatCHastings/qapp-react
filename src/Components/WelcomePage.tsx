@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AnswerForm from "./AnswerForm";
 
-function WelcomePage() {
+function WelcomePage(this: any) {
   const navigate = useNavigate();
   const [SID, setSID] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  <AnswerForm currentUserSID={this.state.currentUserSID} />;
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();

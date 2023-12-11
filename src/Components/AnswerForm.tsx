@@ -1,16 +1,20 @@
 import React, { Component, ChangeEvent, FormEvent, JSX } from "react";
 import axios from "axios";
+import WelcomePage from "./WelcomePage";
 import "./AnswerForm.css";
 import successGif from "../assets/blk-mage-dance.gif";
 
+interface AnswerFormProps {
+  currentUserSID: string; // Assuming SID is of type string, adjust it if needed
+}
 interface AnswerFormState {
   response: string;
   errorMessage: string;
   submitted: boolean;
 }
 
-class AnswerForm extends Component<{}, AnswerFormState> {
-  constructor(props: {}) {
+class AnswerForm extends Component<AnswerFormProps, AnswerFormState> {
+  constructor(props: AnswerFormProps) {
     super(props);
     this.state = {
       response: "",
@@ -38,6 +42,7 @@ class AnswerForm extends Component<{}, AnswerFormState> {
     const answer = {
       response: this.state.response,
       createdAt: new Date(),
+      SID: this.props.currentUserSID,
     };
     // Sends POST request to backend API to submit the answer
     axios
