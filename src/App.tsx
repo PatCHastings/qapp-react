@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
-        <Route path="/answer" element={<AnswerForm />} />
+        <Route path="/answerForm/:SID" element={<AnswerForm />} />
       </Routes>
     </Router>
   );

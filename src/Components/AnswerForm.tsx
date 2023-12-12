@@ -1,61 +1,57 @@
-import React, { Component, ChangeEvent, FormEvent, JSX } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
-import WelcomePage from "./WelcomePage";
 import "./AnswerForm.css";
+import useUser from "./UseUser"; // Import the UseUser hook
 import successGif from "../assets/blk-mage-dance.gif";
 
-interface AnswerFormProps {
-  currentUserSID: string; // Assuming SID is of type string, adjust it if needed
-}
 interface AnswerFormState {
   response: string;
   errorMessage: string;
   submitted: boolean;
 }
 
-class AnswerForm extends Component<AnswerFormProps, AnswerFormState> {
-  constructor(props: AnswerFormProps) {
-    super(props);
-    this.state = {
-      response: "",
-      errorMessage: "",
-      submitted: false,
-    };
-  }
+const AnswerForm: React.FC = () => {
+  const { currentUserSID } = useUser(); // Use the useUser hook to get the currentUserSID
 
-  handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      response: e.target.value,
-    });
+  const [state, setState] = useState<AnswerFormState>({
+    response: "",
+    errorMessage: "",
+    submitted: false,
+  });
+
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setState((prevState) => ({ ...prevState, response: e.target.value }));
   };
 
-  handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!this.state.response) {
-      this.setState({
+    if (!state.response) {
+      setState((prevState) => ({
+        ...prevState,
         errorMessage: "Answer content cannot be empty",
-      });
+      }));
       return;
     }
 
     const answer = {
-      response: this.state.response,
+      response: state.response,
       createdAt: new Date(),
-      SID: this.props.currentUserSID,
+      SID: currentUserSID || "", // Use currentUserSID or an empty string if not available
     };
     // Sends POST request to backend API to submit the answer
     axios
       .post("http://localhost:8080/api/answers/submitAnswer", answer)
       .then((response) => {
-        console.log("Answeria submitted successfully:", response.data);
-        this.setState({
+        console.log("Answer submitted successfully:", response.data);
+        setState((prevState) => ({
+          ...prevState,
           response: "",
           errorMessage: "",
           submitted: true,
-        });
+        }));
         setTimeout(() => {
-          this.setState({ submitted: false });
+          setState((prevState) => ({ ...prevState, submitted: false }));
         }, 4000);
       })
       .catch((error) => {
@@ -63,42 +59,40 @@ class AnswerForm extends Component<AnswerFormProps, AnswerFormState> {
       });
   };
 
-  render() {
-    return (
-      <div className="container">
-        {" "}
-        {/* Add the 'container' class here */}
-        <h2>Submit an Answer</h2>
-        {this.state.submitted && (
-          <img
-            src={successGif} // path to the GIF
-            alt="Success GIF"
-            className="success-gif"
+  return (
+    <div className="container">
+      {" "}
+      {/* Add the 'container' class here */}
+      <h2>Submit an Answer</h2>
+      {state.submitted && (
+        <img
+          src={successGif} // path to the GIF
+          alt="Success GIF"
+          className="success-gif"
+        />
+      )}
+      {state.errorMessage && (
+        <div className="alert alert-danger">{state.errorMessage}</div>
+      )}
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          {" "}
+          {/* Add the 'form-group' class here */}
+          <label>Answer:</label>
+          <textarea
+            className="form-control"
+            rows={4}
+            cols={50}
+            value={state.response}
+            onChange={handleInputChange}
           />
-        )}
-        {this.state.errorMessage && (
-          <div className="alert alert-danger">{this.state.errorMessage}</div>
-        )}
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            {" "}
-            {/* Add the 'form-group' class here */}
-            <label>Answer:</label>
-            <textarea
-              className="form-control"
-              rows={4}
-              cols={50}
-              value={this.state.response}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Submit Answer
-          </button>
-        </form>
-      </div>
-    );
-  }
-}
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Submit Answer
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default AnswerForm;

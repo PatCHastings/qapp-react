@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AnswerForm from "./AnswerForm";
 
-function WelcomePage(this: any) {
+function WelcomePage() {
   const navigate = useNavigate();
   const [SID, setSID] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  <AnswerForm currentUserSID={this.state.currentUserSID} />;
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -20,7 +17,7 @@ function WelcomePage(this: any) {
 
       if (response.ok) {
         // SID is authenticated, navigate to AnswerForm
-        navigate("/answer");
+        navigate(`/answerForm/${SID}`);
       } else {
         // SID is not authenticated, display an error message
         setErrorMessage("SID is not valid. Please try again.");
