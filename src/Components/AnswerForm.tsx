@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
 import "./AnswerForm.css";
-import useUser from "./UseUser"; // Import the UseUser hook
+import useUser from "./UseUser";
 import successGif from "../assets/blk-mage-dance.gif";
 
 interface AnswerFormState {
@@ -11,7 +11,7 @@ interface AnswerFormState {
 }
 
 const AnswerForm: React.FC = () => {
-  const { currentUserSID } = useUser(); // Use the useUser hook to get the currentUserSID
+  const { currentUserSID } = useUser();
 
   const [state, setState] = useState<AnswerFormState>({
     response: "",
@@ -36,12 +36,14 @@ const AnswerForm: React.FC = () => {
 
     const answer = {
       response: state.response,
-      createdAt: new Date(),
-      SID: currentUserSID || "", // Use currentUserSID or an empty string if not available
+      createdAt: new Date().toISOString(),
+      SID: currentUserSID,
     };
-    // Sends POST request to backend API to submit the answer
+
     axios
-      .post("http://localhost:8080/api/answers/submitAnswer", answer)
+      .post("http://localhost:8080/api/answers/submitAnswer", answer, {
+        withCredentials: true,
+      })
       .then((response) => {
         console.log("Answer submitted successfully:", response.data);
         setState((prevState) => ({
@@ -56,28 +58,24 @@ const AnswerForm: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error submitting answer:", error);
+        setState((prevState) => ({
+          ...prevState,
+          errorMessage: "Error submitting answer: " + error.message,
+        }));
       });
   };
 
   return (
     <div className="container">
-      {" "}
-      {/* Add the 'container' class here */}
       <h2>Submit an Answer</h2>
       {state.submitted && (
-        <img
-          src={successGif} // path to the GIF
-          alt="Success GIF"
-          className="success-gif"
-        />
+        <img src={successGif} alt="Success GIF" className="success-gif" />
       )}
       {state.errorMessage && (
         <div className="alert alert-danger">{state.errorMessage}</div>
       )}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          {" "}
-          {/* Add the 'form-group' class here */}
           <label>Answer:</label>
           <textarea
             className="form-control"

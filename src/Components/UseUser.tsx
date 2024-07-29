@@ -1,35 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "./UserContext";
 
-interface User {
-  SID: string;
-}
-
-// Define a custom hook to get the current user's SID
 const useUser = (): { currentUserSID: string | null } => {
-  const [currentUserSID, setCurrentUserSID] = useState<string | null>(null);
+  const { currentUserSID, setCurrentUserSID } = useContext(UserContext);
 
   useEffect(() => {
-    // You should fetch the currentUserSID from your authentication system here
-    // For example, using a session or a JWT token
-    // Set it using setCurrentUserSID
-
-    // For demonstration purposes, let's assume you have a function that fetches the SID
     const fetchCurrentUserSID = async () => {
       try {
-        const response = await fetch("/api/getCurrentUserSID"); // Replace with your actual API endpoint
+        const response = await fetch(
+          "http://localhost:8080/api/answers/getCurrentUserSID",
+          {
+            credentials: "include",
+          }
+        );
         if (response.ok) {
-          const data: User = await response.json();
-          setCurrentUserSID(data.SID); // Assuming your API returns the SID
+          const data: { SID: string } = await response.json();
+          setCurrentUserSID(data.SID);
         } else {
-          setCurrentUserSID(null); // Set to null if there's no authenticated user
+          setCurrentUserSID(null);
         }
       } catch (error) {
         console.error("Error fetching current user SID:", error);
-        setCurrentUserSID(null); // Handle errors gracefully
+        setCurrentUserSID(null);
       }
     };
 
-    fetchCurrentUserSID(); // Fetch the current user's SID when the component mounts
+    fetchCurrentUserSID();
   }, []);
 
   return { currentUserSID };
